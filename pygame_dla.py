@@ -20,59 +20,63 @@ YELLOW = (255, 255, 0)
 
 pygame.display.set_caption("Diffusion-limited aggregation")
 clock = pygame.time.Clock()
+def main():
+    class Model(DLA):
+    #class Model(DLA, pygame.sprite.Sprite):
+        def __init__(self, X, Y):
+            super(Model, self).__init__(X, Y)
+            #pygame.sprite.Sprite.__init__(self)
+            super(Model,self).generator(d_min=0, d_max=6)
+            print(self.r)
+            min = self.r
+            super().circle()
+            for i in range(self.Y):
+                for j in range(self.X):
+                    if self.field[i][j] == 1:
+                        self.particle = pygame.draw.rect(screen, (0, 125, 255), pygame.Rect(j * 50, i * 50, 50, 50))
 
-
-class Model(DLA,  pygame.sprite.Sprite):
-    def __init__(self, X, Y):
-        super(Model, self).__init__(X, Y)
-        pygame.sprite.Sprite.__init__(self)
-        super(Model,self).generator(d_min=0, d_max=6)
-        print(self.r)
-        min = self.r
-        super().circle()
-        for i in range(self.Y):
-            for j in range(self.X):
-                if self.field[i][j] == 1:
-                    self.particle = pygame.draw.rect(screen, (0, 125, 255), pygame.Rect(j * 50, i * 50, 50, 50))
-
-        self.particle.centerx = width / 2
-        self.particle.bottom = height - 10
-        self.speedx = 0
-        self.speedy = 0
-
-    def update(self):
-        self.speedx = 0
-        self.speedy = 0
-        keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_LEFT]:
-            self.speedx = -8
-            self.speedy = 0
-        if keystate[pygame.K_RIGHT]:
-            self.speedx = 8
-            self.speedy = 0
-        if keystate[pygame.K_UP]:
+            self.particle.centerx = width / 2
+            self.particle.bottom = height - 10
             self.speedx = 0
-            self.speedy = -8
-        if keystate[pygame.K_DOWN]:
+            self.speedy = 0
+
+        def update(self):
             self.speedx = 0
-            self.speedy = +8
+            self.speedy = 0
+            keystate = pygame.key.get_pressed()
+            if keystate[pygame.K_LEFT]:
+                self.speedx = -8
+                self.speedy = 0
 
-        self.particle.x += self.speedx
-        self.particle.y += self.speedy
+            if keystate[pygame.K_RIGHT]:
+                self.speedx = 8
+                self.speedy = 0
 
-        if self.particle.right > width:
-            self.particle.right = height
-        if self.particle.left < 0:
-            self.particle.left = 0
-        if self.particle.y < 0:
-            self.particle.y = 0
-        if self.particle.y > height:
-            self.particle.y = 0
+            if keystate[pygame.K_UP]:
+                self.speedx = 0
+                self.speedy = -8
+
+            if keystate[pygame.K_DOWN]:
+                self.speedx = 0
+                self.speedy = +8
+
+            self.particle.x += self.speedx
+            self.particle.y += self.speedy
+
+            if self.particle.right > width:
+                self.particle.right = height
+            if self.particle.left < 0:
+                self.particle.left = 0
+            if self.particle.y < 0:
+                self.particle.y = 0
+            if self.particle.y > height:
+                self.particle.y = 0
 def game():
-    all_sprites = pygame.sprite.Group()
-    first_model = Model(25, 25)
+    #all_sprites = pygame.sprite.Group()
+    main()
+    first_model = main().Model(25, 25)
     first_model.generator(0,6)
-    all_sprites.add(first_model)
+    #all_sprites.add(first_model)
     # Цикл игры
     running = True
     while running:
@@ -85,11 +89,13 @@ def game():
                 running = False
 
         # Обновление
-        all_sprites.update()
+        #all_sprites.update()
+        first_model.update()
 
         # Рендеринг
         screen.fill(BLACK)
-        all_sprites.draw(screen)
+        #all_sprites.draw(screen)
+        #first_model.draw(screen)
         # После отрисовки всего, переворачиваем экран
         pygame.display.flip()
 def menu():
